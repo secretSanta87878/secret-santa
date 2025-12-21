@@ -634,7 +634,7 @@
       roleBoard.classList.add("hidden");
 
       // 3..2..1.. REVEAL
-      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","9","8","lost count","just kidding","ready?", "REVEAL"];
+      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","lost count","just kidding","ready?", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
