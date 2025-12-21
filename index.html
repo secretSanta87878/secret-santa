@@ -1,0 +1,383 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secret Santa</title>
+  <style>
+    :root { color-scheme: light; }
+    body{
+      margin:0;
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      background:#f6f7fb;
+      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      color:#0f172a;
+    }
+    .wrap { width: 100%; display:grid; place-items:center; padding: 22px 0; }
+    .card{
+      width:min(680px,calc(100% - 32px));
+      background:#fff;
+      border:1px solid #e5e7eb;
+      border-radius:18px;
+      box-shadow:0 12px 34px rgba(15,23,42,.10);
+      padding:22px;
+    }
+    .top{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin-bottom:10px;
+      flex-wrap:wrap;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#fbfbff;
+      font-size:13px;
+      color:#334155;
+      white-space:nowrap;
+    }
+    h1{ font-size:20px; margin:10px 0 6px; }
+    p{ margin:8px 0; color:#334155; line-height:1.55; }
+    .small{ font-size:12px; color:#64748b; }
+    .bar{
+      height:10px;
+      background:#e2e8f0;
+      border-radius:999px;
+      overflow:hidden;
+      margin:14px 0 8px;
+    }
+    .bar > div{
+      height:100%;
+      width:0%;
+      background:#0f172a;
+      border-radius:999px;
+      transition:width .35s ease;
+    }
+    .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+    button{
+      border:0;
+      border-radius:12px;
+      padding:12px 14px;
+      font-weight:650;
+      cursor:pointer;
+    }
+    .primary{ background:#0f172a; color:#fff; }
+    .ghost{ background:#e2e8f0; color:#0f172a; }
+    .danger{ background:#991b1b; color:#fff; }
+    .reveal{
+      margin-top:14px;
+      padding:14px;
+      border-radius:14px;
+      border:1px dashed #cbd5e1;
+      background:#f8fafc;
+    }
+    .hidden{ display:none; }
+    .msg{
+      white-space:pre-wrap;
+      font-size:15px;
+      color:#0f172a;
+    }
+    .formRow{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-top:10px;
+    }
+    input{
+      flex: 1 1 220px;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 12px 12px;
+      font-size: 14px;
+      outline: none;
+    }
+    input:focus{ border-color:#94a3b8; }
+    .ok{ color:#166534; }
+    .warn{ color:#92400e; }
+    .muted{ opacity:.85; }
+    .hr { height:1px; background:#e5e7eb; margin:14px 0; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="card">
+      <div class="top">
+        <div class="pill">🎁 Secret Santa • Group Surprise</div>
+        <div class="pill" id="whoPill">Not checked in</div>
+      </div>
+
+      <h1 id="title">Welcome guys</h1>
+      <p id="subtitle">
+        Put your name below, then press READY. Since Roaa is the host, she will be the last one to press READY.
+      </p>
+
+      <!-- CHECK-IN BOX -->
+      <div class="reveal" id="checkinBox">
+        <p class="small muted">Your name is only used on your phone to decide whether you are the host.</p>
+        <div class="formRow">
+          <input id="nameInput" placeholder="Type your name (e.g., Ahmed)" autocomplete="name" />
+          <button class="primary" id="readyBtn">READY</button>
+        </div>
+        <div class="small" id="checkinStatus" style="margin-top:10px;">
+          Status: <span class="warn">Not ready</span>
+        </div>
+
+        <div class="hr"></div>
+
+        <!-- Non-host waiting box -->
+        <div id="waitingBox" class="hidden">
+          <p><strong>Waiting for Roaa…</strong></p>
+          <p class="small">
+            When Roaa presses READY, she will announce a start code. Type it below to begin together.
+          </p>
+          <div class="formRow">
+            <input id="codeInput" placeholder="Start code (host will say it)" autocomplete="off" />
+            <button class="primary" id="joinBtn">START</button>
+          </div>
+          <div class="small" id="codeHint" style="margin-top:8px;"></div>
+        </div>
+
+        <!-- Host control box -->
+        <div id="hostBox" class="hidden">
+          <p><strong>Host mode (Roaa)</strong></p>
+          <p class="small">
+            When everyone is ready, press the button below and announce the code out loud.
+          </p>
+          <div class="btnrow">
+            <button class="danger" id="hostStartBtn">READY (Host) — Start the surprise</button>
+          </div>
+          <div class="small" id="hostHint" style="margin-top:8px;"></div>
+        </div>
+      </div>
+
+      <!-- FLOW BOX -->
+      <div id="flowBox" class="hidden">
+        <div class="bar"><div id="fill"></div></div>
+        <div class="small" id="status">Initializing…</div>
+
+        <div class="reveal hidden" id="jokeBox">
+          <p><strong>Result:</strong> You successfully scanned a QR code that leads to… absolutely nothing.</p>
+          <p class="small">I am just kidding, guys please bare with me, I promise this is gonna be fun :)</p>
+
+          <div class="btnrow" style="margin-top:12px;">
+            <button class="primary" id="revealMsgBtn">Click to reveal the real message</button>
+          </div>
+        </div>
+
+        <div class="reveal hidden" id="msgBox">
+          <p><strong>Okay, real message:</strong></p>
+          <div class="msg" id="msg"></div>
+          <p class="small" id="footerSmall"></p>
+
+          <p class="small" style="margin-top:12px;">
+            P.S. There is something else below — scroll down a lot.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Big scroll gap -->
+    <div id="scrollGap" class="hidden" style="height:1800px;"></div>
+
+    <!-- Video far down -->
+    <div class="card hidden" id="videoSection">
+      <div class="pill">🎬 Bonus</div>
+      <h1 style="margin-top:10px;">One more thing…</h1>
+
+      <video controls preload="metadata" style="width:100%; border-radius:14px; margin-top:12px;">
+        <source src="video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+
+      <p class="small" style="margin-top:10px;">
+        If the video does not load, make sure the file name is exactly <strong>video.mp4</strong> and it is uploaded next to <strong>index.html</strong>.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    // =========================
+    // CONFIG (EDIT THESE)
+    // =========================
+    // Host name variants we accept (case-insensitive).
+    const HOST_NAMES = ["Roaa", "roaa", "roa", "roa'a", "roaa ", "رؤى", "رواء", "رؤيا"].map(s => s.trim());
+
+    // Roaa announces this out loud after pressing host start.
+    const START_CODE = "2026";
+
+    const MESSAGE_LINES = [
+      "Merry Christmas and happy new year guys🙂",
+      "I just wanted to say I’m really happy you’re in my life.",
+      "Also, I wanna thank chatGPT for make all that whitin 2 hours",
+      "I surely didn't spent a lot of time on that",
+      "because I have a life."
+    ];
+    const FOOTER = "Signed: Roaa's secret santa";
+    // =========================
+
+    const whoPill = document.getElementById("whoPill");
+    const title = document.getElementById("title");
+    const subtitle = document.getElementById("subtitle");
+
+    const nameInput = document.getElementById("nameInput");
+    const readyBtn = document.getElementById("readyBtn");
+    const checkinStatus = document.getElementById("checkinStatus");
+
+    const waitingBox = document.getElementById("waitingBox");
+    const codeInput = document.getElementById("codeInput");
+    const joinBtn = document.getElementById("joinBtn");
+    const codeHint = document.getElementById("codeHint");
+
+    const hostBox = document.getElementById("hostBox");
+    const hostStartBtn = document.getElementById("hostStartBtn");
+    const hostHint = document.getElementById("hostHint");
+
+    const checkinBox = document.getElementById("checkinBox");
+    const flowBox = document.getElementById("flowBox");
+    const fill = document.getElementById("fill");
+    const status = document.getElementById("status");
+
+    const jokeBox = document.getElementById("jokeBox");
+    const msgBox = document.getElementById("msgBox");
+    const revealMsgBtn = document.getElementById("revealMsgBtn");
+
+    const scrollGap = document.getElementById("scrollGap");
+    const videoSection = document.getElementById("videoSection");
+
+    document.getElementById("msg").textContent = MESSAGE_LINES.join("\n");
+    document.getElementById("footerSmall").textContent = FOOTER;
+
+    function normalizeName(s){
+      return (s || "").trim().toLowerCase();
+    }
+    function isHostName(s){
+      const n = normalizeName(s);
+      return HOST_NAMES.includes(n);
+    }
+
+    function setStatusReady(text){
+      checkinStatus.innerHTML = `Status: <span class="ok">Ready</span> — ${text}`;
+    }
+    function setStatusNotReady(text){
+      checkinStatus.innerHTML = `Status: <span class="warn">Not ready</span> — ${text}`;
+    }
+
+    function showHostUI(name){
+      whoPill.textContent = `Host: ${name}`;
+      waitingBox.classList.add("hidden");
+      hostBox.classList.remove("hidden");
+      hostHint.innerHTML = `When you press the button, announce the code: <strong>${START_CODE}</strong>`;
+    }
+
+    function showGuestUI(name){
+      whoPill.textContent = `Guest: ${name}`;
+      hostBox.classList.add("hidden");
+      waitingBox.classList.remove("hidden");
+      codeHint.textContent = "";
+    }
+
+    let running = false;
+
+    const steps = [
+      { w: 25,  t: "Checking gift authenticity…", s: "Step 1/4: establishing festive connection…" },
+      { w: 55,  t: "Running quality control…",     s: "Step 2/4: analyzing holiday spirit levels…" },
+      { w: 80,  t: "Almost done…",                s: "Step 3/4: confirming you’re awesome…" },
+      { w: 100, t: "Complete.",                   s: "Step 4/4: finalizing absolutely nothing…" }
+    ];
+    async function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
+
+    async function runFlow(){
+      if (running) return;
+      running = true;
+
+      // lock check-in, show flow
+      checkinBox.classList.add("hidden");
+      flowBox.classList.remove("hidden");
+
+      // reset
+      fill.style.width = "0%";
+      status.textContent = "Initializing…";
+      jokeBox.classList.add("hidden");
+      msgBox.classList.add("hidden");
+      scrollGap.classList.add("hidden");
+      videoSection.classList.add("hidden");
+
+      title.textContent = "Please wait…";
+      subtitle.textContent = "This is 100% serious and definitely not a joke.";
+
+      for (let i=0;i<steps.length;i++){
+        fill.style.width = steps[i].w + "%";
+        title.textContent = steps[i].t;
+        status.textContent = steps[i].s;
+        await sleep(750);
+      }
+
+      subtitle.textContent = "Okay… you can stop taking this seriously now.";
+      jokeBox.classList.remove("hidden");
+
+      running = false;
+    }
+
+    // READY button logic
+    readyBtn.addEventListener("click", () => {
+      const rawName = (nameInput.value || "").trim();
+      if (!rawName) {
+        setStatusNotReady("Please type your name first.");
+        nameInput.focus();
+        return;
+      }
+
+      setStatusReady(`Welcome, ${rawName}.`);
+
+      if (isHostName(rawName)) {
+        showHostUI(rawName);
+      } else {
+        showGuestUI(rawName);
+      }
+    });
+
+    // Host presses to start (on their phone)
+    hostStartBtn.addEventListener("click", () => {
+      // Host starts immediately on host phone
+      runFlow();
+    });
+
+    // Guests must enter the spoken start code
+    function tryJoin(){
+      const typed = (codeInput.value || "").trim();
+      if (typed !== START_CODE) {
+        codeHint.innerHTML = '<span class="warn">Wrong code.</span> Wait for Roaa and try again.';
+        codeInput.focus();
+        codeInput.select();
+        return;
+      }
+      codeHint.innerHTML = '<span class="ok">Correct.</span> Starting…';
+      runFlow();
+    }
+    joinBtn.addEventListener("click", tryJoin);
+    codeInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") tryJoin();
+    });
+
+    // Reveal message + unlock video far down
+    revealMsgBtn.addEventListener("click", () => {
+      msgBox.classList.remove("hidden");
+      scrollGap.classList.remove("hidden");
+      videoSection.classList.remove("hidden");
+      msgBox.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    // Default state
+    setStatusNotReady("Waiting.");
+  </script>
+</body>
+</html>
