@@ -118,14 +118,14 @@
       <h1 id="title">Welcome guys</h1>
       <p id="subtitle">
         Put your name below, then press READY. Since Roaa is the host, she will be the last one to press READY.
-        Simple instructions: Please read all possible words, try to do it together, don't miss anything, and try to do all other instructions (if any) at the same time
+        Simple instructions: try to do all steps at the same time
       </p>
 
       <!-- CHECK-IN BOX -->
       <div class="reveal" id="checkinBox">
         <p class="small muted">Your name is only used on your phone to decide whether you are the host.</p>
         <div class="formRow">
-          <input id="nameInput" placeholder="Type your name (e.g., Allahu Akbar)" autocomplete="name" />
+          <input id="nameInput" placeholder="your name (e.g., Allahu_Akbar)" autocomplete="name" />
           <button class="primary" id="readyBtn">READY</button>
         </div>
         <div class="small" id="checkinStatus" style="margin-top:10px;">
@@ -155,7 +155,7 @@
             The code is: 2026. say it out loud, let them type the code, then all together press start
           </p>
           <div class="btnrow">
-            <button class="danger" id="hostStartBtn">READY (Host) — Start the surprise</button>
+            <button class="danger" id="hostStartBtn">Start</button>
           </div>
           <div class="small" id="hostHint" style="margin-top:8px;"></div>
         </div>
@@ -168,7 +168,7 @@
 
         <div class="reveal hidden" id="jokeBox">
           <p><strong>Result:</strong> You successfully scanned a QR code that leads to… absolutely nothing.</p>
-          <p class="small">I am just kidding, guys please bare with me, I promise this is gonna be fun :)</p>
+          <p class="small">I am just kidding, now click on the button below :)</p>
 
           <div class="btnrow" style="margin-top:12px;">
             <button class="primary" id="revealMsgBtn">Click to reveal the real message</button>
@@ -188,7 +188,7 @@
     </div>
 
     <!-- Big scroll gap -->
-    <div id="scrollGap" class="hidden" style="height:1800px;"></div>
+    <div id="scrollGap" class="hidden" style="height:2400px;"></div>
 
     <!-- Video far down -->
     <div class="card hidden" id="videoSection">
@@ -201,7 +201,7 @@
       </video>
 
       <p class="small" style="margin-top:10px;">
-        If the video does not load, make sure the file name is exactly <strong>video.mp4</strong> and it is uploaded next to <strong>index.html</strong>.
+        Okay, no more jokes, thank you all, now Roaa can open her gift, I hope she likes it 🫰🏻🫰🏻🫰🏻.
       </p>
     </div>
   </div>
@@ -288,10 +288,10 @@
     let running = false;
 
     const steps = [
-      { w: 25,  t: "Checking gift authenticity…", s: "Step 1/4: establishing festive connection…", ms: 7000 },
-      { w: 55,  t: "Running quality control…",     s: "Step 2/4: analyzing holiday spirit levels…", ms: 7000 },
-      { w: 80,  t: "Almost done…",                s: "Step 3/4: confirming you’re awesome…", ms: 7000 },
-      { w: 100, t: "Complete.",                   s: "Step 4/4: finalizing absolutely nothing…", ms: 7000 }
+      { w: 25,  t: "This is gonna take a while…", s: "Step 1/4: Are you ready?…", ms: 12000 },
+      { w: 55,  t: "Running quality control…",     s: "Step 2/4: Are you sure you wanna see what's coming?…", ms: 12000 },
+      { w: 80,  t: "Preparing the surprise…",                s: "Step 3/4: If you are a coward don't look…", ms: 12000 },
+      { w: 100, t: "Almost done...",                   s: "Step 4/4: If you made it to this point, then congrats, you are awesome…", ms: 12000 }
     ];
     async function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
