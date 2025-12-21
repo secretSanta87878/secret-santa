@@ -623,10 +623,10 @@
     let running = false;
 
     const steps = [
-      { w: 25,  t: "This is gonna take a while…", s: "Step 1/4: Are you ready?…", ms: 12000 },
-      { w: 55,  t: "Running quality control…",    s: "Step 2/4: Are you sure you wanna see what's coming?…", ms: 12000 },
-      { w: 80,  t: "Preparing the surprise…",     s: "Step 3/4: If you are a coward don't look…", ms: 12000 },
-      { w: 100, t: "Almost done...",              s: "Step 4/4: If you made it to this point, then congrats, you are awesome…", ms: 12000 }
+      { w: 25,  t: "Initializing game lobby…", s: "Step 1/4: connecting all players and synchronizing devices, are you ready?…", ms: 12000 },
+      { w: 55,  t: "Verifying player readiness…",    s: "Step 2/4: checking that all players are present and ready…", ms: 12000 },
+      { w: 80,  t: "Preparing game state…",     s: "Step 3/4: Loading shared experience and final settings…", ms: 12000 },
+      { w: 100, t: "Almost done...",              s: "Step 4/4: starting the game for all players simultaneously…", ms: 12000 }
     ];
 
     async function runCeremonyCountdown(){
@@ -634,7 +634,7 @@
       roleBoard.classList.add("hidden");
 
       // 3..2..1.. REVEAL
-      const seq = ["3", "2", "1", "REVEAL"];
+      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","9","8","lost count","just kidding","ready?", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
