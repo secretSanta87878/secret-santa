@@ -92,19 +92,53 @@
       align-items:center;
       margin-top:10px;
     }
-    input{
+    input, select{
       flex: 1 1 220px;
       border: 1px solid #e5e7eb;
       border-radius: 12px;
       padding: 12px 12px;
       font-size: 14px;
       outline: none;
+      background:#fff;
     }
-    input:focus{ border-color:#94a3b8; }
+    input:focus, select:focus{ border-color:#94a3b8; }
     .ok{ color:#166534; }
     .warn{ color:#92400e; }
     .muted{ opacity:.85; }
     .hr { height:1px; background:#e5e7eb; margin:14px 0; }
+
+    .badgeLine{
+      margin-top:10px;
+      font-size:13px;
+      color:#0f172a;
+    }
+    .badgePill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+      font-size:13px;
+      color:#0f172a;
+    }
+    .noteBox{
+      margin-top:12px;
+      padding:12px;
+      border-radius:14px;
+      border:1px solid #e5e7eb;
+      background:#fff;
+    }
+    .videoText{
+      font-size:18px;
+      line-height:1.6;
+      color:#0f172a;
+      margin-top:14px;
+    }
+    @media (max-width:480px){
+      .videoText{ font-size:16px; }
+    }
   </style>
 </head>
 <body>
@@ -117,17 +151,50 @@
 
       <h1 id="title">Welcome guys</h1>
       <p id="subtitle">
-        Put your name below, then press READY. Since Roaa is the host, she will be the last one to press READY.
-        Simple instructions: try to do all steps at the same time
+        Pick your name, then press READY. Since Roaa is the host, she will be the last one to press READY.
+        Simple instructions: try to do all steps at the same time.
       </p>
 
       <!-- CHECK-IN BOX -->
       <div class="reveal" id="checkinBox">
         <p class="small muted">Your name is only used on your phone to decide whether you are the host.</p>
+
         <div class="formRow">
-          <input id="nameInput" placeholder="your name (e.g., Allahu_Akbar)" autocomplete="name" />
+          <!-- Dropdown list of names (alphabetical) -->
+          <select id="nameSelect">
+            <option value="" selected disabled>Select your name</option>
+            <option>Ahmad</option>
+            <option>Alan</option>
+            <option>Aous</option>
+            <option>Bashar</option>
+            <option>Nisreen</option>
+            <option>Roaa</option>
+            <option>Sidra</option>
+            <option>Taima</option>
+            <option>Tharaa</option>
+            <option>Yara</option>
+            <option>Yazan</option>
+            <option value="__other__">Other (type manually)</option>
+          </select>
+
           <button class="primary" id="readyBtn">READY</button>
         </div>
+
+        <!-- Manual name input (only if Other selected) -->
+        <div class="formRow hidden" id="otherNameRow">
+          <input id="nameInput" placeholder="Type your name exactly" autocomplete="name" />
+          <button class="ghost" id="useSelectedBtn" type="button">Use dropdown</button>
+        </div>
+
+        <!-- Fun: verification line + badge -->
+        <div class="noteBox hidden" id="funBox">
+          <div class="small muted" id="verifyLine">Verification…</div>
+          <div class="badgeLine" id="badgeLine"></div>
+          <div class="small muted" style="margin-top:8px;">
+            Please read the line above, then keep your phone on this screen.
+          </div>
+        </div>
+
         <div class="small" id="checkinStatus" style="margin-top:10px;">
           Status: <span class="warn">Not ready</span>
         </div>
@@ -137,9 +204,14 @@
         <!-- Non-host waiting box -->
         <div id="waitingBox" class="hidden">
           <p><strong>Waiting for Roaa…</strong></p>
-          <p class="small">
-            When Roaa presses READY, she will announce a start code. Type it below then all of you (including Roaa) press start at the SAME TIME
-          </p>
+
+          <div class="noteBox">
+            <p class="small" style="margin:0;">
+              Before pressing START: everyone should be ready on this page.
+              When Roaa says the code, type it below, then all of you (including Roaa) press START at the SAME TIME.
+            </p>
+          </div>
+
           <div class="formRow">
             <input id="codeInput" placeholder="Start code (host will say it)" autocomplete="off" />
             <button class="primary" id="joinBtn">START</button>
@@ -150,11 +222,16 @@
         <!-- Host control box -->
         <div id="hostBox" class="hidden">
           <p><strong>Host mode (Roaa)</strong></p>
-          <p class="small">
-            The code is: 2026. say it out loud, let them type the code, then all together press start
-          </p>
+
+          <div class="noteBox">
+            <p class="small" style="margin:0;">
+              The code is: <strong>2026</strong>. Say it out loud, let them type the code,
+              then all together press START.
+            </p>
+          </div>
+
           <div class="btnrow">
-            <button class="danger" id="hostStartBtn">Start</button>
+            <button class="danger" id="hostStartBtn">START</button>
           </div>
           <div class="small" id="hostHint" style="margin-top:8px;"></div>
         </div>
@@ -199,7 +276,7 @@
         Your browser does not support the video tag.
       </video>
 
-      <p class="videoText" style="margin-top:10px;">
+      <p class="videoText">
         Okay, no more jokes, thank you all, now Roaa can open her gift, I hope she likes it 🫰🏻🫰🏻🫰🏻.
       </p>
     </div>
@@ -209,8 +286,10 @@
     // =========================
     // CONFIG (EDIT THESE)
     // =========================
+
     // Host name variants we accept (case-insensitive).
-    const HOST_NAMES = ["Roaa", "roaa", "roa", "roa'a", "roaa ", "رؤى", "رواء", "رؤيا"].map(s => s.trim());
+    const HOST_NAMES = ["Roaa", "roaa", "roa", "roa'a", "roaa ", "رؤى", "رواء", "رؤيا"]
+      .map(s => s.trim().toLowerCase());
 
     // Roaa announces this out loud after pressing host start.
     const START_CODE = "2026";
@@ -221,15 +300,45 @@
       "but yes, there is one more thing."
     ];
     const FOOTER = "Signed: Roaa's secret santa";
+
+    // Fun: verification lines (Idea B)
+    const VERIFY_LINES = [
+      "Identity verified. You look trustworthy today.",
+      "Verification complete. Please act normal.",
+      "Name accepted. Your vibe has been approved.",
+      "Security check passed. No suspicious holiday behavior detected.",
+      "Confirmed. You are officially part of the ceremony.",
+      "Accepted. Do not refresh. This is your only warning."
+    ];
+
+    // Fun: badges/titles (Idea C)
+    const BADGES = [
+      "Chief Holiday Officer",
+      "Minister of Snacks",
+      "Head of Dramatic Reactions",
+      "Director of Good Vibes",
+      "Certified QR Scanner",
+      "Lead Laugh Producer",
+      "Guardian of the Group Energy",
+      "Senior Approval Authority"
+    ];
     // =========================
 
     const whoPill = document.getElementById("whoPill");
     const title = document.getElementById("title");
     const subtitle = document.getElementById("subtitle");
 
+    const nameSelect = document.getElementById("nameSelect");
+    const otherNameRow = document.getElementById("otherNameRow");
     const nameInput = document.getElementById("nameInput");
+    const useSelectedBtn = document.getElementById("useSelectedBtn");
+
     const readyBtn = document.getElementById("readyBtn");
     const checkinStatus = document.getElementById("checkinStatus");
+
+    const funBox = document.getElementById("funBox");
+    const verifyLine = document.getElementById("verifyLine");
+    const badgeLine = document.getElementById("badgeLine");
 
     const waitingBox = document.getElementById("waitingBox");
     const codeInput = document.getElementById("codeInput");
@@ -263,6 +372,22 @@
       return HOST_NAMES.includes(n);
     }
 
+    // Deterministic small hash -> stable badge per name
+    function hashString(str){
+      let h = 0;
+      for (let i = 0; i < str.length; i++){
+        h = (h * 31 + str.charCodeAt(i)) >>> 0;
+      }
+      return h;
+    }
+    function pickBadgeForName(name){
+      const h = hashString(normalizeName(name));
+      return BADGES[h % BADGES.length];
+    }
+    function pickVerifyLine(){
+      return VERIFY_LINES[Math.floor(Math.random() * VERIFY_LINES.length)];
+    }
+
     function setStatusReady(text){
       checkinStatus.innerHTML = `Status: <span class="ok">Ready</span> — ${text}`;
     }
@@ -274,7 +399,7 @@
       whoPill.textContent = `Host: ${name}`;
       waitingBox.classList.add("hidden");
       hostBox.classList.remove("hidden");
-      hostHint.innerHTML = `When you press the button, announce the code: <strong>${START_CODE}</strong>`;
+      hostHint.innerHTML = `When you press START, announce the code: <strong>${START_CODE}</strong>`;
     }
 
     function showGuestUI(name){
@@ -284,13 +409,44 @@
       codeHint.textContent = "";
     }
 
+    function showFunLines(name){
+      funBox.classList.remove("hidden");
+      verifyLine.textContent = pickVerifyLine();
+
+      const badge = pickBadgeForName(name);
+      badgeLine.innerHTML = `Your role for today: <span class="badgePill">🪪 ${badge}</span>`;
+    }
+
+    // Handle "Other" name option
+    function refreshNameMode(){
+      const v = nameSelect.value;
+      if (v === "__other__") {
+        otherNameRow.classList.remove("hidden");
+        nameInput.focus();
+      } else {
+        otherNameRow.classList.add("hidden");
+      }
+    }
+    nameSelect.addEventListener("change", refreshNameMode);
+    useSelectedBtn.addEventListener("click", () => {
+      nameSelect.value = "";
+      otherNameRow.classList.add("hidden");
+    });
+
+    function getSelectedOrTypedName(){
+      const v = nameSelect.value;
+      if (v && v !== "__other__") return v.trim();
+      if (v === "__other__") return (nameInput.value || "").trim();
+      return "";
+    }
+
     let running = false;
 
     const steps = [
       { w: 25,  t: "This is gonna take a while…", s: "Step 1/4: Are you ready?…", ms: 12000 },
-      { w: 55,  t: "Running quality control…",     s: "Step 2/4: Are you sure you wanna see what's coming?…", ms: 12000 },
-      { w: 80,  t: "Preparing the surprise…",                s: "Step 3/4: If you are a coward don't look…", ms: 12000 },
-      { w: 100, t: "Almost done...",                   s: "Step 4/4: If you made it to this point, then congrats, you are awesome…", ms: 12000 }
+      { w: 55,  t: "Running quality control…",    s: "Step 2/4: Are you sure you wanna see what's coming?…", ms: 12000 },
+      { w: 80,  t: "Preparing the surprise…",     s: "Step 3/4: If you are a coward don't look…", ms: 12000 },
+      { w: 100, t: "Almost done...",              s: "Step 4/4: If you made it to this point, then congrats, you are awesome…", ms: 12000 }
     ];
     async function sleep(ms){ return new Promise(r => setTimeout(r, ms)); }
 
@@ -328,14 +484,16 @@
 
     // READY button logic
     readyBtn.addEventListener("click", () => {
-      const rawName = (nameInput.value || "").trim();
+      const rawName = getSelectedOrTypedName();
+
       if (!rawName) {
-        setStatusNotReady("Please type your name first.");
-        nameInput.focus();
+        setStatusNotReady("Please select your name (or choose Other and type it).");
+        nameSelect.focus();
         return;
       }
 
       setStatusReady(`Welcome, ${rawName}.`);
+      showFunLines(rawName);
 
       if (isHostName(rawName)) {
         showHostUI(rawName);
@@ -346,7 +504,6 @@
 
     // Host presses to start (on their phone)
     hostStartBtn.addEventListener("click", () => {
-      // Host starts immediately on host phone
       runFlow();
     });
 
@@ -377,6 +534,7 @@
 
     // Default state
     setStatusNotReady("Waiting.");
+    refreshNameMode();
   </script>
 </body>
 </html>
