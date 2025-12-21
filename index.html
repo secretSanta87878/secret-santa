@@ -318,7 +318,7 @@
         fill.style.width = steps[i].w + "%";
         title.textContent = steps[i].t;
         status.textContent = steps[i].s;
-        await sleep(750);
+        await sleep(steps[i].ms);
       }
 
       subtitle.textContent = "Okay… you can stop taking this seriously now.";
