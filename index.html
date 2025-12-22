@@ -228,10 +228,10 @@
         <div class="pill" id="whoPill">Not checked in</div>
       </div>
 
-      <h1 id="title">Welcome guys to the "Luji Game"</h1>
+      <h1 id="title">Welcome guys to my first game</h1>
       <p id="subtitle">
-        Pick your name, then press READY. Since Roaa is the host, she will be the last one to press READY, then she will reveal a code.
-        Simple instructions: try to do all steps at the same time.
+        It is a simple and short game (5-7 mins), First, pick your name, then press READY.  one of us will be the host, all he/she has to do is to reveal a code.
+        Simple instruction: after you click on READY, try to do all other steps at the same time.
       </p>
 
       <!-- CHECK-IN BOX -->
@@ -258,10 +258,6 @@
           <button class="primary" id="readyBtn">READY</button>
         </div>
 
-        <div class="formRow hidden" id="otherNameRow">
-          <input id="nameInput" placeholder="Or type your name exactly" autocomplete="name" />
-          <button class="ghost" id="useSelectedBtn" type="button">Use dropdown</button>
-        </div>
 
         <!-- Fun: verification line + badge -->
         <div class="noteBox hidden" id="funBox">
@@ -280,12 +276,12 @@
 
         <!-- Non-host waiting box -->
         <div id="waitingBox" class="hidden">
-          <p><strong>Waiting for Roaa…</strong></p>
+          <p><strong>Waiting for the host…</strong></p>
 
           <div class="noteBox">
             <p class="small" style="margin:0;">
               Before pressing START: everyone should be ready on this page, and say outloud which role is assigned to you, it is okay if there are repeated roles.
-              When Roaa says the code, type it below, then all of you (including Roaa) press START at the SAME TIME.
+              When the host says the code, type it below, then all of you (including th host) press START at the SAME TIME.
             </p>
           </div>
 
@@ -333,7 +329,7 @@
             <span class="miniPill">based on code</span>
           </h2>
           <p class="small" style="margin:6px 0 0;">
-            Roaa pressed START. The system has assigned one role to each person. Please accept your fate.
+            The system has assigned one role to each person. Please accept your fate.
           </p>
 
           <table class="roleTable" id="roleTable">
@@ -634,7 +630,7 @@
       roleBoard.classList.add("hidden");
 
       // 3..2..1.. REVEAL
-      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","lost count","just kidding","ready?", "REVEAL"];
+      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","...","...","43503","43502","43501","lost count","just kidding","tired?","ready?", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
