@@ -234,9 +234,9 @@
         <div class="pill" id="whoPill">Not checked in</div>
       </div>
 
-      <h1 id="title">Welcome guys to my first game</h1>
+      <h1 id="title">Welcome guys to the "no name" game</h1>
       <p id="subtitle">
-        It is a simple and short game (5–7 mins). First, pick your name, then press READY.
+        It is a simple and a short game (5–7 mins). First, pick your name, then press READY.
         One of us will be the host; the host will reveal a code.
         After you click READY, try to do all other steps at the same time.
       </p>
@@ -632,7 +632,7 @@
       countdownBox.classList.remove("hidden");
       roleBoard.classList.add("hidden");
 
-      const seq = ["5","4","3","2","1","REVEAL"];
+      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","...","...","43503","43502","43501","lost count","just kidding","tired?","ready?", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
