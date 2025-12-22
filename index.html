@@ -47,6 +47,7 @@
     h1{ font-size:20px; margin:10px 0 6px; }
     p{ margin:8px 0; color:#334155; line-height:1.55; }
     .small{ font-size:12px; color:#64748b; }
+
     .bar{
       height:10px;
       background:#e2e8f0;
@@ -61,6 +62,7 @@
       border-radius:999px;
       transition:width .35s ease;
     }
+
     .btnrow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
     button{
       border:0;
@@ -72,6 +74,7 @@
     .primary{ background:#0f172a; color:#fff; }
     .ghost{ background:#e2e8f0; color:#0f172a; }
     .danger{ background:#991b1b; color:#fff; }
+
     .reveal{
       margin-top:14px;
       padding:14px;
@@ -80,11 +83,13 @@
       background:#f8fafc;
     }
     .hidden{ display:none; }
+
     .msg{
       white-space:pre-wrap;
       font-size:15px;
       color:#0f172a;
     }
+
     .formRow{
       display:flex;
       gap:10px;
@@ -102,6 +107,7 @@
       background:#fff;
     }
     input:focus, select:focus{ border-color:#94a3b8; }
+
     .ok{ color:#166534; }
     .warn{ color:#92400e; }
     .muted{ opacity:.85; }
@@ -230,13 +236,14 @@
 
       <h1 id="title">Welcome guys to my first game</h1>
       <p id="subtitle">
-        It is a simple and short game (5-7 mins), First, pick your name, then press READY.  one of us will be the host, all he/she has to do is to reveal a code.
-        Simple instruction: after you click on READY, try to do all other steps at the same time.
+        It is a simple and short game (5–7 mins). First, pick your name, then press READY.
+        One of us will be the host; the host will reveal a code.
+        After you click READY, try to do all other steps at the same time.
       </p>
 
       <!-- CHECK-IN BOX -->
       <div class="reveal" id="checkinBox">
-        <p class="small muted">You will be assigned for 2 roles, English one and Arabic one.</p>
+        <p class="small muted">You will be assigned 2 roles: one English badge + one Arabic role.</p>
 
         <div class="formRow">
           <select id="nameSelect">
@@ -258,6 +265,11 @@
           <button class="primary" id="readyBtn">READY</button>
         </div>
 
+        <!-- Manual name row (only if Other) -->
+        <div class="formRow hidden" id="otherNameRow">
+          <input id="nameInput" placeholder="Type your name" autocomplete="name" />
+          <button class="ghost" id="useSelectedBtn" type="button">Use selected name</button>
+        </div>
 
         <!-- Fun: verification line + badge -->
         <div class="noteBox hidden" id="funBox">
@@ -280,8 +292,8 @@
 
           <div class="noteBox">
             <p class="small" style="margin:0;">
-              Before pressing START: everyone should be ready on this page, and say outloud which role is assigned to you, it is okay if there are repeated roles.
-              When the host says the code, type it below, then all of you (including th host) press START at the SAME TIME.
+              Before pressing START: everyone should be ready on this page, and say out loud which role is assigned to you.
+              When the host says the code, type it below, then all of you (including the host) press START at the SAME TIME.
             </p>
           </div>
 
@@ -322,7 +334,7 @@
           <div class="countdownHint">Everyone look at your screen. Do not blink.</div>
         </div>
 
-        <!-- Role assignment board (appears after countdown) -->
+        <!-- Role assignment board -->
         <div class="roleBoard hidden" id="roleBoard">
           <h2>
             Official Role Assignment
@@ -332,7 +344,7 @@
             The system has assigned one role to each person. Please accept your fate.
           </p>
 
-          <table class="roleTable" id="roleTable">
+          <table class="roleTable">
             <thead>
               <tr>
                 <th style="width:40%;">Name</th>
@@ -347,15 +359,17 @@
           </p>
         </div>
 
+        <!-- Joke -->
         <div class="reveal hidden" id="jokeBox">
-          <p><strong>Result:</strong> Your roles that has been assigned to you are going to be used in the next step of the game.</p>
-          <p class="small">I am just kidding, it was just for fun, there is no game, it is just a message for all of you, now click on the button below :)</p>
+          <p><strong>Result:</strong> Your roles will be used in the next step of the game.</p>
+          <p class="small">Just kidding. There is no game. It’s just a message for all of you. Click the button below :)</p>
 
           <div class="btnrow" style="margin-top:12px;">
             <button class="primary" id="revealMsgBtn">Click to reveal the real message</button>
           </div>
         </div>
 
+        <!-- Real message -->
         <div class="reveal hidden" id="msgBox">
           <p><strong>Okay, real message:</strong></p>
           <div class="msg" id="msg"></div>
@@ -382,7 +396,7 @@
       </video>
 
       <p class="videoText">
-        Okay, no more jokes, thank you all, now Roaa can open her gift, I hope she likes it 🫰🏻🫰🏻🫰🏻.
+        Okay, no more jokes. Thank you all. Now Roaa can open her gift. I hope she likes it.
       </p>
     </div>
   </div>
@@ -393,7 +407,7 @@
     // =========================
     const NAMES = [
       "Ahmad","Alan","Aous","Bashar","Nisreen","Roaa","Sidra","Taima","Tharaa","Yara","Yazan"
-    ]; // alphabetical
+    ]; // fixed list for the role table
 
     const HOST_NAMES = ["Roaa", "roaa", "roa", "roa'a", "roaa ", "رؤى", "رواء", "رؤيا"]
       .map(s => s.trim().toLowerCase());
@@ -403,7 +417,7 @@
     const MESSAGE_LINES = [
       "Merry Christmas and happy new year guys ❤️❤️❤️",
       "I just wanted to say I’m really happy you’re in my life.",
-      "but yes, there is one more thing."
+      "But yes, there is one more thing."
     ];
     const FOOTER = "Signed: Roaa's secret santa";
 
@@ -497,8 +511,7 @@
       return (s || "").trim().toLowerCase();
     }
     function isHostName(s){
-      const n = normalizeName(s);
-      return HOST_NAMES.includes(n);
+      return HOST_NAMES.includes(normalizeName(s));
     }
 
     function hashString(str){
@@ -524,7 +537,6 @@
         return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
       };
     }
-
     function deterministicShuffle(arr, seedStr){
       const seed = hashString(String(seedStr));
       const rand = mulberry32(seed);
@@ -542,7 +554,6 @@
       const shuffledRoles = deterministicShuffle(roles, START_CODE);
       return names.map((n, idx) => ({ name: n, role: shuffledRoles[idx] }));
     }
-
     function renderRoleBoard(){
       const pairs = buildRoleAssignments();
       roleTbody.innerHTML = "";
@@ -550,11 +561,9 @@
         const tr = document.createElement("tr");
         const tdName = document.createElement("td");
         const tdRole = document.createElement("td");
-
         tdName.textContent = p.name;
         tdRole.textContent = p.role;
         tdRole.classList.add("rtl");
-
         tr.appendChild(tdName);
         tr.appendChild(tdRole);
         roleTbody.appendChild(tr);
@@ -574,7 +583,6 @@
       hostBox.classList.remove("hidden");
       hostHint.innerHTML = `When you press START, announce the code: <strong>${START_CODE}</strong>`;
     }
-
     function showGuestUI(name){
       whoPill.textContent = `Guest: ${name}`;
       hostBox.classList.add("hidden");
@@ -598,11 +606,6 @@
         otherNameRow.classList.add("hidden");
       }
     }
-    nameSelect.addEventListener("change", refreshNameMode);
-    useSelectedBtn.addEventListener("click", () => {
-      nameSelect.value = "";
-      otherNameRow.classList.add("hidden");
-    });
 
     function getSelectedOrTypedName(){
       const v = nameSelect.value;
@@ -619,23 +622,21 @@
     let running = false;
 
     const steps = [
-      { w: 25,  t: "Initializing game lobby…", s: "Step 1/4: connecting all players and synchronizing devices, are you ready?…", ms: 12000 },
-      { w: 55,  t: "Verifying player readiness…",    s: "Step 2/4: checking that all players are present and ready…", ms: 12000 },
-      { w: 80,  t: "Preparing game state…",     s: "Step 3/4: Loading shared experience and final settings…", ms: 12000 },
-      { w: 100, t: "Almost done...",              s: "Step 4/4: starting the game for all players simultaneously…", ms: 12000 }
+      { w: 25,  t: "Initializing game lobby…", s: "Step 1/4: connecting all players and synchronizing devices…", ms: 12000 },
+      { w: 55,  t: "Verifying player readiness…", s: "Step 2/4: checking that all players are present and ready…", ms: 12000 },
+      { w: 80,  t: "Preparing game state…", s: "Step 3/4: loading shared experience and final settings…", ms: 12000 },
+      { w: 100, t: "Almost done…", s: "Step 4/4: starting the game for all players simultaneously…", ms: 12000 }
     ];
 
     async function runCeremonyCountdown(){
       countdownBox.classList.remove("hidden");
       roleBoard.classList.add("hidden");
 
-      // 3..2..1.. REVEAL
-      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","...","...","43503","43502","43501","lost count","just kidding","tired?","ready?", "REVEAL"];
+      const seq = ["5","4","3","2","1","REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
       }
-
       countdownBox.classList.add("hidden");
     }
 
@@ -666,12 +667,10 @@
         await sleep(steps[i].ms);
       }
 
-      // Ceremony: countdown -> roles
       await runCeremonyCountdown();
       renderRoleBoard();
       roleBoard.classList.remove("hidden");
 
-      // After roles: reveal joke
       await sleep(1200);
       subtitle.textContent = "Okay… you can stop taking this seriously now.";
       jokeBox.classList.remove("hidden");
@@ -682,6 +681,15 @@
     // =========================
     // Events
     // =========================
+    nameSelect.addEventListener("change", refreshNameMode);
+
+    useSelectedBtn.addEventListener("click", () => {
+      nameSelect.value = "";
+      otherNameRow.classList.add("hidden");
+      nameInput.value = "";
+      nameSelect.focus();
+    });
+
     readyBtn.addEventListener("click", () => {
       const rawName = getSelectedOrTypedName();
 
@@ -694,11 +702,8 @@
       setStatusReady(`Welcome, ${rawName}.`);
       showFunLines(rawName);
 
-      if (isHostName(rawName)) {
-        showHostUI(rawName);
-      } else {
-        showGuestUI(rawName);
-      }
+      if (isHostName(rawName)) showHostUI(rawName);
+      else showGuestUI(rawName);
     });
 
     hostStartBtn.addEventListener("click", () => {
@@ -716,6 +721,7 @@
       codeHint.innerHTML = '<span class="ok">Correct.</span> Starting…';
       runFlow();
     }
+
     joinBtn.addEventListener("click", tryJoin);
     codeInput.addEventListener("keydown", (e) => {
       if (e.key === "Enter") tryJoin();
