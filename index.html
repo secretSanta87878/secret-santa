@@ -238,7 +238,7 @@
       <p id="subtitle">
         It is a simple and a short game (5–7 mins). First, pick your name, then press READY.
         One of us will be the host; the host will reveal a code.
-        After you click READY, try to do all other steps at the same time.
+        After all of you click READY, try to do all other steps at the same time.
       </p>
 
       <!-- CHECK-IN BOX -->
@@ -632,7 +632,7 @@
       countdownBox.classList.remove("hidden");
       roleBoard.classList.add("hidden");
 
-      const seq = ["💃","🕺","💃💃","🕺🕺","💃💃💃","🕺🕺🕺","5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","..."," ...","  ...","43503","43502","43501","lost count","just kidding","tired?","ready?","ALLAH AKBAR", "REVEAL"];
+      const seq = ["💃","🕺","💃💃","🕺🕺","💃💃💃","🕺🕺🕺","5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","3.14","0.632","...","..",".","43503","43502","43501","tired?","ready?","ALLAH AKBAR", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
@@ -658,7 +658,7 @@
       videoSection.classList.add("hidden");
 
       title.textContent = "Please wait…";
-      subtitle.textContent = "This is 100% serious and definitely not a joke.";
+      subtitle.textContent = "This may take a while, take a snack";
 
       for (let i=0;i<steps.length;i++){
         fill.style.width = steps[i].w + "%";
