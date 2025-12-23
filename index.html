@@ -267,8 +267,8 @@
 
         <!-- Manual name row (only if Other) -->
         <div class="formRow hidden" id="otherNameRow">
-          <input id="nameInput" placeholder="Type your name" autocomplete="name" />
-          <button class="ghost" id="useSelectedBtn" type="button">Use selected name</button>
+          <input id="nameInput" placeholder="Don't type anything here" autocomplete="name" />
+          <button class="ghost" id="useSelectedBtn" type="button">Don't click please</button>
         </div>
 
         <!-- Fun: verification line + badge -->
@@ -292,7 +292,7 @@
 
           <div class="noteBox">
             <p class="small" style="margin:0;">
-              Before pressing START: everyone should be ready on this page, and say out loud which role is assigned to you.
+              Before pressing START: everyone should be ready on this page, and say out loud which role is assigned to you, (it is okay if there are repeated roles).
               When the host says the code, type it below, then all of you (including the host) press START at the SAME TIME.
             </p>
           </div>
@@ -632,7 +632,7 @@
       countdownBox.classList.remove("hidden");
       roleBoard.classList.add("hidden");
 
-      const seq = ["5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","...","...","43503","43502","43501","lost count","just kidding","tired?","ready?", "REVEAL"];
+      const seq = ["💃","🕺","💃💃","🕺🕺","💃💃💃","🕺🕺🕺","5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","..."," ...",""  ..."","43503","43502","43501","lost count","just kidding","tired?","ready?", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
