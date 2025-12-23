@@ -632,7 +632,7 @@
       countdownBox.classList.remove("hidden");
       roleBoard.classList.add("hidden");
 
-      const seq = ["💃","🕺","💃💃","🕺🕺","💃💃💃","🕺🕺🕺","5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","..."," ...",""  ..."","43503","43502","43501","lost count","just kidding","tired?","ready?","ALLAH AKBAR", "REVEAL"];
+      const seq = ["💃","🕺","💃💃","🕺🕺","💃💃💃","🕺🕺🕺","5", "4","3", "2", "1", "0.75","0.50","0.25","0.1","0.05","0.005","0.0005","Pi","e-2","9","8","7","..."," ...","  ...","43503","43502","43501","lost count","just kidding","tired?","ready?","ALLAH AKBAR", "REVEAL"];
       for (let i = 0; i < seq.length; i++){
         countdownNumber.textContent = seq[i];
         await sleep(i === seq.length - 1 ? 650 : 900);
